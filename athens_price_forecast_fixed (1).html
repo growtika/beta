@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תחזית מחירי נדל"ן אתונה 2018-2027</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            margin: 0;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-bottom: 40px;
+        }
+        
+        .insights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .insight-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .insight-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .insight-text {
+            font-size: 1em;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+        
+        .source {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 0.9em;
+            margin-top: 30px;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: #f7fafc;
+            border-right: 5px solid #667eea;
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        
+        .highlight-box h3 {
+            color: #2d3748;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        
+        .highlight-box p {
+            color: #4a5568;
+            line-height: 1.7;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>מחירי נדל"ן באתונה: מגמת עלייה יציבה</h1>
+        <p class="subtitle">נתוני שוק מבוססים מ-2018 ותחזית עד 2027</p>
+        
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+        
+        <div class="highlight-box">
+            <h3>💡 מה הנתונים מלמדים</h3>
+            <p>
+                השוק באתונה עבר מהתאוששות חזקה עם עליות דו-ספרתיות בשנים 2022-2023, 
+                וכעת נכנס לשלב של צמיחה יציבה ובריאה. התחזית לשנים 2025-2027 מבוססת על 
+                נתוני Bank of Greece, EBA ו-Indomio, ומראה המשך עלייה מתונה של 3-7% בשנה.
+            </p>
+        </div>
+        
+
+        
+        <p class="source">
+            מקורות: Bank of Greece, Indomio.com, Spitogatos | נכון לאוקטובר 2025
+        </p>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        
+        const data = {
+            labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027'],
+            datasets: [
+                {
+                    label: 'מחיר בפועל (€/מ"ר)',
+                    data: [1900, 2034, 2132, 2283, 2555, 2908, 2941, 3089, null, null],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 4,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'תחזית (€/מ"ר)',
+                    data: [null, null, null, null, null, null, null, 3089, 3194, 3303],
+                    borderColor: '#48bb78',
+                    backgroundColor: 'rgba(72, 187, 120, 0.1)',
+                    borderWidth: 4,
+                    borderDash: [10, 5],
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#48bb78',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    fill: true
+                }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'center',
+                        rtl: true,
+                        labels: {
+                            font: {
+                                size: 14,
+                                family: 'Heebo',
+                                weight: '500'
+                            },
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        rtl: true,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 15,
+                        titleFont: {
+                            size: 16,
+                            family: 'Heebo',
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 14,
+                            family: 'Heebo'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += '€' + context.parsed.y.toLocaleString('he-IL');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 1500,
+                        max: 4000,
+                        ticks: {
+                            font: {
+                                size: 13,
+                                family: 'Heebo'
+                            },
+                            callback: function(value) {
+                                return '€' + value.toLocaleString('he-IL');
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 13,
+                                family: 'Heebo',
+                                weight: '500'
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>
